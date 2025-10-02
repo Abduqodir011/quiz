@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz App</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-container">
+        <h2 id="question">Savol bu yerda chiqadi</h2>
+        <div id="answer-buttons"></div>
+        <button id="next-btn" class="btn">Keyingi</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "O‘zbekiston poytaxti qaysi?",
+                answers: [
+                    { text: "Toshkent", correct: true },
+                    { text: "Samarqand", correct: false },
+                    { text: "Buxoro", correct: false }
+                ]
+            },
+            {
+                question: "HTMLda sarlavha uchun qaysi teg ishlatiladi?",
+                answers: [
+                    { text: "<head>", correct: false },
+                    { text: "<title>", correct: false },
+                    { text: "<h1>", correct: true }
+                ]
+            }
+        ];
+
+        const questionElement = document.getElementById("question");
+        const answerButtons = document.getElementById("answer-buttons");
+        const nextButton = document.getElementById("next-btn");
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            nextButton.innerHTML = "Keyingi";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetState();
+            let currentQuestion = questions[currentQuestionIndex];
+            questionElement.innerHTML = currentQuestion.question;
+
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement("button");
+                button.innerHTML = answer.text;
+                button.classList.add("btn");
+                button.addEventListener("click", () => selectAnswer(answer));
+                answerButtons.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            nextButton.style.display = "none";
+            while (answerButtons.firstChild) {
+                answerButtons.removeChild(answerButtons.firstChild);
+            }
+        }
+
+        function selectAnswer(answer) {
+            if (answer.correct) {
+                score++;
+                alert("✅ To‘g‘ri javob!");
+            } else {
+                alert("❌ Noto‘g‘ri javob!");
+            }
+            nextButton.style.display = "block";
+        }
+
+        nextButton.addEventListener("click", () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        });
+
+        function showScore() {
+            resetState();
+            questionElement.innerHTML = Quiz tugadi! Sizning ballingiz: ${ score } / ${questions.length};
+            nextButton.innerHTML = "Qayta boshlash";
+            nextButton.style.display = "block";
+            nextButton.addEventListener("click", startQuiz);
+        }
+
+        startQuiz();
+    </script>
+</body>
+
+</html>
